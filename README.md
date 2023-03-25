@@ -16,14 +16,22 @@ py -m venv venv
 venv\Scripts\activate
 ```
 
+### To exit the virtual environment
+
+```
+deactivate
+```
+
 ### Install dependencies
 
 ```
 pip install -r requirements.txt
 ```
 
-### To run the game
+## To run the game
 
 ```
 py main.py
 ```
+
+##
