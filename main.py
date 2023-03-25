@@ -9,11 +9,31 @@ class Main():
         running = True
         self.ship = ship.Ship(800, 600)
 
+    def handleEvent(self): # create the keyboard events
+        for event in pg.event.get():            
+            if event.type == pg.QUIT:
+                return self.quit()
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_UP:
+                    self.ship.vy = -1                            
+
+                elif event.key == pg.K_DOWN:
+                    self.ship.vy = 1
+            elif event.type == pg.KEYUP:
+                self.ship.vy = 0
+            
+            else:
+                pass
+                
+        
+
+        return False
+
     def main_loop(self):
         while True:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    return self.quit()
+            self.handleEvent()
+            self.ship.update(800, 600)
             self.display.fill("black")
             self.display.blit(self.ship.image, self.ship.rect)
             pg.display.flip()
