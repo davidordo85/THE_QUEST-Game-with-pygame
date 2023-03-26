@@ -6,12 +6,10 @@ class Ship(pg.sprite.Sprite):
     w = 65
     h = 65
 
-
     def __init__(self, x, y):
         super().__init__()
         self.image = pg.Surface((self.w, self.h), pg.SRCALPHA, 32)
         self.rect = self.image.get_rect()
-
 
         self.rect.centerx = x
         self.rect.centery = y

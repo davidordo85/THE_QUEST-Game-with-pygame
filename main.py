@@ -1,5 +1,6 @@
 import pygame as pg
 from ship import ship
+from asteroids import asteroids
 import sys
 
 class Main():
@@ -8,6 +9,7 @@ class Main():
         pg.display.set_caption("THE QUEST")
         running = True
         self.ship = ship.Ship(800, 600)
+        self.asteroid = asteroids.Asteroid(800, 600)
 
     def handleEvent(self): # create the keyboard events
         for event in pg.event.get():            
@@ -24,9 +26,7 @@ class Main():
                 self.ship.vy = 0
             
             else:
-                pass
-                
-        
+                pass        
 
         return False
 
@@ -34,10 +34,12 @@ class Main():
         while True:
             self.handleEvent()
             self.ship.update(800, 600)
+            self.asteroid.update(800, 600)
             self.display.fill("black")
             self.display.blit(self.ship.image, self.ship.rect)
-            pg.display.flip()
-    
+            self.display.blit(self.asteroid.image, self.asteroid.rect)
+
+            pg.display.flip()    
 
     def quit(self):
         pg.quit()
