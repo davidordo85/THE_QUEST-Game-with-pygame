@@ -13,7 +13,7 @@ class Ship(pg.sprite.Sprite):
 
         self.rect.centerx = x
         self.rect.centery = y
-        self.frame = pg.image.load('./resources/ship_sprites/Spaceships_0.png').convert_alpha()
+        self.frame = pg.image.load('./resources/images/ship_sprites/Spaceships_0.png').convert_alpha()
         self.image.blit(self.frame, (0, 0), (0, 0, self.w, self.h))
 
         self.rect.centerx = 40

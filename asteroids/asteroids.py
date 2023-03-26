@@ -21,7 +21,7 @@ class Asteroid(pg.sprite.Sprite):
     def loadImages(self):
         images = []
         for i in range(self.num_sprites):
-            image = pg.image.load("./resources/asteroid_sprites/asteroid_{}.png".format(i))     
+            image = pg.image.load("./resources/images/asteroid_sprites/asteroid_{}.png".format(i))     
             images.append(image)
         return images
     
