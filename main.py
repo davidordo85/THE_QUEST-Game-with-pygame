@@ -20,24 +20,28 @@ class Main():
         self.screen = pg.display.set_mode((h, w))
         self.status = 'Opening'
         pg.display.set_caption("THE QUEST")
-
         self.title = pg.font.Font('./resources/fonts/OdibeeSans-Regular.ttf', 100)
+        self.description = pg.font.Font('./resources/fonts/OdibeeSans-Regular.ttf', 30)
         self.displayProduction = self.title.render("GERMEN PRODUCTION", True, (WHITE))
         self.displayOpening = self.title.render("THE QUEST", True, (WHITE))
+        self.displayDescription = self.description.render("To avoid colliding with the asteroids use the up or down keys, until the planet to land on appears", True, (WHITE))
+        self.startGame = self.description.render("Press space for start", True, (WHITE))
         self.ship = ship.Ship(800, 600)
         self.asteroid = asteroids.Asteroid(800, 600)
 
     def handleEvent(self): # create the keyboard events
+        self.start = False
         for event in pg.event.get():            
             if event.type == pg.QUIT:
                 return self.quit()
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:
-                    self.ship.vy = -1                            
-
+                    self.ship.vy = -1
                 elif event.key == pg.K_DOWN:
                     self.ship.vy = 1
+                elif event.key == pg.K_SPACE:
+                    self.start = True             
             elif event.type == pg.KEYUP:
                 self.ship.vy = 0
             
@@ -55,6 +59,7 @@ class Main():
             self.handleEvent()
             self.screen.fill("black")
             self.screen.blit(self.displayProduction, (150, 200))
+            
             self.ship.update(800, 600)
             self.redraw()
             time.sleep(4)
@@ -64,20 +69,35 @@ class Main():
 
     def front(self):
         front = False
-        self.status = 'Front'
         while not front:
-            self.handleEvent()
+            self.handleEvent()            
             self.screen.fill("black")
-            self.screen.blit(self.displayOpening, (150, 200))            
-            pg.display.flip()        
+            self.ship.update(800, 600)
+            self.screen.blit(self.displayOpening, (100, 50))
+            self.screen.blit(self.displayDescription, (150, 250))
+            self.screen.blit(self.startGame, (150, 500))
+            self.screen.blit(self.ship.image, self.ship.rect)
+            self.redraw()
+            if self.start == True:
+                front = True
+                
+        self.status = 'First_level'
+
+    def firstLevel(self):
+        self.handleEvent()
+        self.screen.fill("white")
+        self.redraw()
+
+        
 
     def main_loop(self):
         while True:
             if self.status == 'Opening':
                 self.opening()
-            if self.status == 'Front':
+            elif self.status == 'Front':
                 self.front()
-            self.redraw()
+            elif self.status == 'First_level':
+                self.firstLevel()
             
 
               
