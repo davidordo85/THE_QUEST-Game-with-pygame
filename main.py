@@ -10,6 +10,7 @@ WHITE = (255, 255, 255)
 class Main():
     clock = pg.time.Clock()
     def __init__(self, w, h):
+
         #create the screen with its size
         self.screen = pg.display.set_mode((h, w))
         #name the window
@@ -22,7 +23,7 @@ class Main():
         self.background = pg.image.load("./resources/images/backgrounds/background_game.png")
 
         self.score = 0
-        self.status = 'Opening'
+        self.status = 'First_level'
 
         # create the screen texts and objects
         self.displayProduction = self.title.render("GERMEN PRODUCTION", True, (WHITE))
@@ -30,8 +31,22 @@ class Main():
         self.displayDescription = self.description.render("To avoid colliding with the asteroids use the up or down keys, until the planet to land on appears", True, (WHITE))
         self.startGame = self.description.render("Press space for start", True, (WHITE))
         self.displayScore = self.fontScore.render(str(self.score), True, WHITE)
-        self.ship = ship.Ship(800, 600)
-        self.asteroid = asteroids.Asteroid(800, 600)
+        self.ship = ship.Ship(800, 600)        
+        self.asteroid_0 = asteroids.Asteroid(800, 600)
+        self.asteroid_1 = asteroids.Asteroid(800, 600)
+        self.asteroid_2 = asteroids.Asteroid(800, 600)
+        self.asteroid_3 = asteroids.Asteroid(800, 600)
+        self.asteroid_4 = asteroids.Asteroid(800, 600)
+        self.asteroid_5 = asteroids.Asteroid(800, 600)
+        self.asteroid_6 = asteroids.Asteroid(800, 600)
+        self.asteroid_7 = asteroids.Asteroid(800, 600)
+
+        self.asteroidLevel1 = pg.sprite.Group()
+        self.asteroidLevel2 = pg.sprite.Group()
+        self.asteroidLevel1.add(self.asteroid_0, self.asteroid_1, self.asteroid_2)
+        self.asteroidLevel2.add(self.asteroid_0, self.asteroid_1, self.asteroid_2, self.asteroid_3, self.asteroid_4)
+
+
 
         
 
@@ -64,11 +79,16 @@ class Main():
 
         return False
 
+    
+
+
     def backgroundMove(self):
         self.x -= 0.5
         if self.x <= -2400:
             self.x = 0
-        
+
+
+            
 
     def redraw(self):
         pg.display.flip()
@@ -102,18 +122,37 @@ class Main():
     def firstLevel(self):
         first = False
         self.x = 0
+        self.how = 4
         
 
         while not first:
             self.handleEvent()
             self.backgroundMove()
             self.ship.update(800, 600)
-            self.asteroid.update(800, 600)
+            self.asteroidLevel1.update(800, 600)
+            self.ship.crashed(self.asteroidLevel1)
+
+
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x+2400, 0))
             self.screen.blit(self.displayScore, (950, 30))
             self.screen.blit(self.ship.image, self.ship.rect)
-            self.screen.blit(self.asteroid.image, self.asteroid.rect)
+            self.asteroidLevel1.draw(self.screen)
+            if self.ship.crash == True:
+                first = True
+                time.sleep(4)
+                self.status = 'Game_over'
+            
+            
+
+            self.redraw()
+
+    def gameOver(self):
+        over = False
+
+        while not over:
+            self.handleEvent()
+            self.screen.fill("black")
             self.redraw()
 
         
@@ -126,6 +165,8 @@ class Main():
                 self.front()
             elif self.status == 'First_level':
                 self.firstLevel()
+            elif self.status == 'Game_over':
+                self.gameOver()
             
 
               

@@ -26,7 +26,7 @@ class Asteroid(pg.sprite.Sprite):
         return images
     
     def update(self, limSupX, limSupY):
-        self.vx = random.randint(1, 2)
+        self.vx = random.randint(3, 20)
         if self.rect.centerx <= 0:
             self.rect.centerx = 1200
             self.rect.centery = random.randint (40, 560)
