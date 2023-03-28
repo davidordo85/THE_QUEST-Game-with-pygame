@@ -38,7 +38,6 @@ class Main:
         )
         self.startGame = self.description.render("Press space for start", True, (WHITE))
         self.theEnd = self.description.render("Game Over", True, (WHITE))
-        self.displayScore = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
@@ -97,6 +96,14 @@ class Main:
     def redraw(self):
         pg.display.flip()
 
+    def scoringConditions(self):
+        for entity in self.asteroidLevel1:
+            if entity.rect.centerx <= 0:
+                self.score += 20
+                self.scoring = self.fontScore.render(str(self.score), True, WHITE)
+            else:
+                self.score = int(self.score)
+
     def opening(self):
         displayOpening = False
         while not displayOpening:
@@ -127,18 +134,20 @@ class Main:
         first = False
         self.x = 0
         self.how = 4
+        self.scoring = self.fontScore.render(str(self.score), True, WHITE)
 
         while not first:
             self.handleEvent()
             self.backgroundMove()
+            self.scoringConditions()
             self.ship.update(800, 600)
             self.asteroidLevel1.update(800, 600)
-            self.ship.collide()
+            # TODO: self.ship.collide()
             self.ship.crashed(self.asteroidLevel1)
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
-            self.screen.blit(self.displayScore, (950, 30))
+            self.screen.blit(self.scoring, (880, 30))
             self.screen.blit(self.ship.image, self.ship.rect)
             self.asteroidLevel1.draw(self.screen)
 
