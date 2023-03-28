@@ -96,8 +96,8 @@ class Main:
     def redraw(self):
         pg.display.flip()
 
-    def scoringConditions(self):
-        for entity in self.asteroidLevel1:
+    def scoringConditions(self, asteroidForLevel):
+        for entity in asteroidForLevel:
             if entity.rect.centerx <= 0:
                 self.score += 20
                 self.scoring = self.fontScore.render(str(self.score), True, WHITE)
@@ -139,7 +139,7 @@ class Main:
         while not first:
             self.handleEvent()
             self.backgroundMove()
-            self.scoringConditions()
+            self.scoringConditions(self.asteroidLevel1)
             self.ship.update(800, 600)
             self.asteroidLevel1.update(800, 600)
             # TODO: self.ship.collide()
