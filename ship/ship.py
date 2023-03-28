@@ -19,7 +19,9 @@ class Ship(pg.sprite.Sprite):
         self.crash = False
         self.game_over = False
         self.image_act = 0
-        self.frame = pg.image.load('./resources/images/ship_sprites/Spaceships_0.png').convert_alpha()
+        self.frame = pg.image.load(
+            "./resources/images/ship_sprites/Spaceships_0.png"
+        ).convert_alpha()
         self.image.blit(self.frame, (0, 0), (0, 0, self.w, self.h))
 
         self.rect.centerx = 40
@@ -28,7 +30,9 @@ class Ship(pg.sprite.Sprite):
     def loadImages(self):
         images = []
         for i in range(self.num_sprites):
-            image = pg.image.load("./resources/images/ship_sprites/Spaceships_{}.png".format(i))
+            image = pg.image.load(
+                "./resources/images/ship_sprites/Spaceships_{}.png".format(i)
+            )
             images.append(image)
         return images
 
@@ -39,7 +43,6 @@ class Ship(pg.sprite.Sprite):
             self.vx = 0
         if self.rect.centerx <= 40:
             self.vx = 0
-
 
         if self.rect.centery < self.rect.h // 2:
             self.rect.centery = self.rect.h // 2
@@ -56,7 +59,7 @@ class Ship(pg.sprite.Sprite):
 
     def collide(self):
         if self.crash == True:
-            self.image_act += 1 
+            self.image_act += 1
             self.images = self.loadImages()
             if self.image_act >= self.num_sprites:
                 self.image_act = 0
@@ -64,4 +67,3 @@ class Ship(pg.sprite.Sprite):
             self.image.blit(self.images[self.image_act], (0, 0))
         else:
             pass
-            
