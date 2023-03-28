@@ -6,6 +6,7 @@ import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+WIN_FIRST_LEVEL = 3000
 
 
 class Main:
@@ -144,6 +145,7 @@ class Main:
             self.asteroidLevel1.update(800, 600)
             # TODO: self.ship.collide()
             self.ship.crashed(self.asteroidLevel1)
+            self.ship.rotate()
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))

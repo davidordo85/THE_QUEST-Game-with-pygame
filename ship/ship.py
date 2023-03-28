@@ -15,9 +15,12 @@ class Ship(pg.sprite.Sprite):
 
         self.rect.centerx = x
         self.rect.centery = y
+        self.rotateCenter = (x, y)
 
         self.crash = False
+        self.angle = 0
         self.game_over = False
+        self.land = False
         self.image_act = 0
         self.frame = pg.image.load(
             "./resources/images/ship_sprites/Spaceships_0.png"
@@ -67,3 +70,27 @@ class Ship(pg.sprite.Sprite):
             self.image.blit(self.images[self.image_act], (0, 0))
         else:
             pass
+
+    def rotate(self):
+        if self.land is True: # if the rotation is ok
+            self.angle = (self.angle +1)%360 # 360º turn
+            self.image = pg.transform.rotate(self.frame, self.angle) # transform image into spin
+            rect = self.image.get_rect() # save image to rect
+            halfW = rect.centerx 
+            halfH = rect.centery
+
+            dX = halfW - self.w // 2
+            dY = halfH - self.h // 2
+
+            self.rect.centerx = self.rotateCenter[0] - dX
+            self.rect.centery = self.rotateCenter[1] - dY                        
+            
+            if self.angle % 180 <= 0:
+
+                self.land = False
+                self.vx = 1
+                self.rect.centerx -= self.vx
+
+        else:
+            self.rotateCenter = self.rect.center
+
