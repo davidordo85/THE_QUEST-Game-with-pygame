@@ -105,6 +105,12 @@ class Main:
             else:
                 self.score = int(self.score)
 
+    def winConditions(self, winLevel):
+        if self.score == winLevel:
+            print("win")
+        else:
+            pass
+
     def opening(self):
         displayOpening = False
         while not displayOpening:
@@ -146,6 +152,7 @@ class Main:
             # TODO: self.ship.collide()
             self.ship.crashed(self.asteroidLevel1)
             self.ship.rotate()
+            self.winConditions(WIN_FIRST_LEVEL)
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
