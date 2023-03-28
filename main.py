@@ -30,6 +30,7 @@ class Main():
         self.displayOpening = self.title.render("THE QUEST", True, (WHITE))
         self.displayDescription = self.description.render("To avoid colliding with the asteroids use the up or down keys, until the planet to land on appears", True, (WHITE))
         self.startGame = self.description.render("Press space for start", True, (WHITE))
+        self.theEnd = self.description.render("Game Over", True, (WHITE))
         self.displayScore = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)        
         self.asteroid_0 = asteroids.Asteroid(800, 600)
@@ -124,12 +125,14 @@ class Main():
         self.x = 0
         self.how = 4
         
+        
 
         while not first:
             self.handleEvent()
             self.backgroundMove()
             self.ship.update(800, 600)
             self.asteroidLevel1.update(800, 600)
+            self.ship.collide()         
             self.ship.crashed(self.asteroidLevel1)
 
 
@@ -138,10 +141,13 @@ class Main():
             self.screen.blit(self.displayScore, (950, 30))
             self.screen.blit(self.ship.image, self.ship.rect)
             self.asteroidLevel1.draw(self.screen)
-            if self.ship.crash == True:
-                first = True
+
+            if self.ship.game_over == True:
+                
                 time.sleep(4)
+                first = True
                 self.status = 'Game_over'
+            
             
             
 
@@ -153,6 +159,7 @@ class Main():
         while not over:
             self.handleEvent()
             self.screen.fill("black")
+            self.screen.blit(self.theEnd, (150, 500))
             self.redraw()
 
         

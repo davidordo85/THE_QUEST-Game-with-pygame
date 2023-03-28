@@ -31,7 +31,7 @@ class Asteroid(pg.sprite.Sprite):
             self.rect.centerx = 1200
             self.rect.centery = random.randint (40, 560)
         else:
-            self.rect.centerx -= self.vx 
+            self.rect.centerx -= self.vx
             
         
         self.image_act += 1
@@ -39,3 +39,5 @@ class Asteroid(pg.sprite.Sprite):
             self.image_act = 0
 
         self.image.blit(self.images[self.image_act], (0, 0))
+
+            
