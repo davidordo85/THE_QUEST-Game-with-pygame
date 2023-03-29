@@ -7,7 +7,9 @@ import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+# TODO: cambiar esto para el juego
 WIN_FIRST_LEVEL = 100
+WIN_SECOND_LEVEL = 1200
 
 
 class Main:
@@ -28,6 +30,7 @@ class Main:
         )
 
         self.score = 0
+        self.whatLevel = 0
         self.status = "First_level"
 
         # create the screen texts and objects
@@ -39,7 +42,11 @@ class Main:
             (WHITE),
         )
         self.startGame = self.description.render("Press space for start", True, (WHITE))
+        self.startingLevel = self.description.render(
+            "Press enter for start", True, (WHITE)
+        )
         self.theEnd = self.description.render("Game Over", True, (WHITE))
+        self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)
         self.planet = planets.Planet(800, 600)
         self.asteroid_0 = asteroids.Asteroid(800, 600)
@@ -64,6 +71,7 @@ class Main:
 
     # create the keyboard events
     def handleEvent(self):
+        self.startLevel = False
         self.start = False
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -76,6 +84,8 @@ class Main:
                     self.ship.vy = 1
                 elif event.key == pg.K_SPACE:
                     self.start = True
+                elif event.key == 13:
+                    self.startLevel = True
             elif event.type == pg.KEYUP:
                 self.ship.vy = 0
             else:
@@ -114,7 +124,7 @@ class Main:
             if self.planet.rect.centerx <= 1000 and self.ship.angle % 180 <= 0:
                 self.ship.land = False
                 self.ship.rect.centerx += self.ship.vx
-                if self.ship.rect.centery > 300:                            
+                if self.ship.rect.centery > 300:
                     self.ship.rect.centery -= self.ship.vx
                 elif self.ship.rect.centery < 300:
                     self.ship.rect.centery += self.ship.vx
@@ -158,7 +168,7 @@ class Main:
         level = False
         self.x = 0
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
-    
+
         while not level:
             self.handleEvent()
             self.backgroundMove()
@@ -178,17 +188,52 @@ class Main:
             self.screen.blit(self.planet.image, self.planet.rect)
             asteroidForLevel.draw(self.screen)
 
-            if self.ship.rect.centerx >= 570:
-                if self.status == 'First_level':
-                    self.score += 1000
-                    level = True
-                    self.status = "Second_level"
-                
+            if self.ship.rect.centerx >= 570 and self.whatLevel == 0:
+                self.score += 1000
+                level = True
+                self.whatLevel += 1
+                self.notFirstLevel = True
+                self.status = "Take_off"
 
             if self.ship.game_over == True:
                 time.sleep(4)
                 level = True
                 self.status = "Game_over"
+
+            self.redraw()
+
+    def takeOff(self):
+        takeOff = False
+        self.scoring = self.fontScore.render(str(self.score), True, WHITE)
+        self.ship.land = True
+        while not takeOff:
+            self.handleEvent()
+            self.backgroundMove()
+            self.ship.update(800, 600)
+            self.ship.rotate()
+            self.screen.blit(self.background, (self.x, 0))
+            self.screen.blit(self.background, (self.x + 2400, 0))
+            self.screen.blit(self.scoring, (700, 30))
+            self.screen.blit(self.ship.image, self.ship.rect)
+            self.screen.blit(self.planet.image, self.planet.rect)
+
+            if self.ship.rect.centerx == 570 and self.ship.angle % 180 >= 0:
+                self.ship.land = False
+                self.ship.vx -= 1
+
+            if self.ship.rect.centerx <= 40:
+                self.planet.takeOffPlanet(800, 600)
+                self.ship.vx = 0
+                self.screen.blit(self.startingLevel, (150, 500))
+
+            if self.startLevel == True and self.whatLevel == 1:
+                self.startLevel = False
+                takeOff = True
+                self.status = "Second_level"
+            elif self.startLevel == True and self.whatLevel == 2:
+                print("third_level")
+            else:
+                pass
 
             self.redraw()
 
@@ -210,7 +255,9 @@ class Main:
             elif self.status == "First_level":
                 self.levels(self.asteroidLevel1, WIN_FIRST_LEVEL)
             elif self.status == "Second_level":
-                print('second')
+                self.levels(self.asteroidLevel2, WIN_SECOND_LEVEL)
+            elif self.status == "Take_off":
+                self.takeOff()
             elif self.status == "Game_over":
                 self.gameOver()
 

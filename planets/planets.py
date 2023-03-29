@@ -17,4 +17,11 @@ class Planet(pg.sprite.Sprite):
             self.vx = 0
         self.rect.centerx -= self.vx
 
+    def takeOffPlanet(self, limSupX, limSupY):
+        self.vx = 1.1
+        if self.rect.centerx >= 1500:
+            self.vx = 0
+
+        self.rect.centerx += self.vx
+
         
