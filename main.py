@@ -1,12 +1,13 @@
 import pygame as pg
 from ship import ship
 from asteroids import asteroids
+from planets import planets
 import sys
 import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-WIN_FIRST_LEVEL = 3000
+WIN_FIRST_LEVEL = 100
 
 
 class Main:
@@ -14,7 +15,7 @@ class Main:
 
     def __init__(self, w, h):
         # create the screen with its size
-        self.screen = pg.display.set_mode((h, w))
+        self.screen = pg.display.set_mode((w, h))
         # name the window
         pg.display.set_caption("THE QUEST")
 
@@ -40,6 +41,7 @@ class Main:
         self.startGame = self.description.render("Press space for start", True, (WHITE))
         self.theEnd = self.description.render("Game Over", True, (WHITE))
         self.ship = ship.Ship(800, 600)
+        self.planet = planets.Planet(800, 600)
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
         self.asteroid_2 = asteroids.Asteroid(800, 600)
@@ -105,9 +107,24 @@ class Main:
             else:
                 self.score = int(self.score)
 
-    def winConditions(self, winLevel):
-        if self.score == winLevel:
-            print("win")
+    def winConditions(self, winLevel, asteroidForLevel):
+        if self.score >= winLevel:
+            self.ship.land = True
+            self.planet.update(800, 600)
+            if self.planet.rect.centerx <= 1000 and self.ship.angle % 180 <= 0:
+                self.ship.land = False
+                self.ship.rect.centerx += self.ship.vx
+                if self.ship.rect.centery > 300:                            
+                    self.ship.rect.centery -= self.ship.vx
+                elif self.ship.rect.centery < 300:
+                    self.ship.rect.centery += self.ship.vx
+                else:
+                    pass
+
+            for entity in asteroidForLevel:
+                if entity.rect.centerx >= 1200:
+                    pg.sprite.Group.empty(asteroidForLevel)
+
         else:
             pass
 
@@ -149,16 +166,23 @@ class Main:
             self.scoringConditions(self.asteroidLevel1)
             self.ship.update(800, 600)
             self.asteroidLevel1.update(800, 600)
-            # TODO: self.ship.collide()
+            
+            # self.ship.collide()
             self.ship.crashed(self.asteroidLevel1)
             self.ship.rotate()
-            self.winConditions(WIN_FIRST_LEVEL)
+            self.winConditions(WIN_FIRST_LEVEL, self.asteroidLevel1)
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
-            self.screen.blit(self.scoring, (880, 30))
+            self.screen.blit(self.scoring, (700, 30))
             self.screen.blit(self.ship.image, self.ship.rect)
-            self.asteroidLevel1.draw(self.screen)
+            self.screen.blit(self.planet.image, self.planet.rect)
+            self.asteroidLevel1.draw(self.screen)            
+
+            """ if self.ship.rect.centerx >= 570:
+                self.score += 1000
+                first = True
+                self.status = "Second_level" """
 
             if self.ship.game_over == True:
                 time.sleep(4)
@@ -194,6 +218,6 @@ class Main:
 
 if __name__ == "__main__":
     pg.init(),
-    game = Main(600, 1000)
+    game = Main(800, 600)
     game.main_loop()
     game.quit()
