@@ -154,39 +154,40 @@ class Main:
 
         self.status = "First_level"
 
-    def firstLevel(self):
-        first = False
+    def levels(self, asteroidForLevel, Win):
+        level = False
         self.x = 0
-        self.how = 4
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
-
-        while not first:
+    
+        while not level:
             self.handleEvent()
             self.backgroundMove()
-            self.scoringConditions(self.asteroidLevel1)
+            self.scoringConditions(asteroidForLevel)
             self.ship.update(800, 600)
-            self.asteroidLevel1.update(800, 600)
-            
+            asteroidForLevel.update(800, 600)
+
             # self.ship.collide()
-            self.ship.crashed(self.asteroidLevel1)
+            self.ship.crashed(asteroidForLevel)
             self.ship.rotate()
-            self.winConditions(WIN_FIRST_LEVEL, self.asteroidLevel1)
+            self.winConditions(Win, asteroidForLevel)
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
             self.screen.blit(self.scoring, (700, 30))
             self.screen.blit(self.ship.image, self.ship.rect)
             self.screen.blit(self.planet.image, self.planet.rect)
-            self.asteroidLevel1.draw(self.screen)            
+            asteroidForLevel.draw(self.screen)
 
-            """ if self.ship.rect.centerx >= 570:
-                self.score += 1000
-                first = True
-                self.status = "Second_level" """
+            if self.ship.rect.centerx >= 570:
+                if self.status == 'First_level':
+                    self.score += 1000
+                    level = True
+                    self.status = "Second_level"
+                
 
             if self.ship.game_over == True:
                 time.sleep(4)
-                first = True
+                level = True
                 self.status = "Game_over"
 
             self.redraw()
@@ -207,7 +208,9 @@ class Main:
             elif self.status == "Front":
                 self.front()
             elif self.status == "First_level":
-                self.firstLevel()
+                self.levels(self.asteroidLevel1, WIN_FIRST_LEVEL)
+            elif self.status == "Second_level":
+                print('second')
             elif self.status == "Game_over":
                 self.gameOver()
 
