@@ -84,7 +84,7 @@ class Main:
                     self.ship.vy = 1
                 elif event.key == pg.K_SPACE:
                     self.start = True
-                elif event.key == 13:
+                elif event.key == pg.K_RETURN:
                     self.startLevel = True
             elif event.type == pg.KEYUP:
                 self.ship.vy = 0
@@ -226,7 +226,7 @@ class Main:
                 self.ship.vx = 0
                 self.screen.blit(self.startingLevel, (150, 500))
 
-            if self.startLevel == True and self.whatLevel == 1:
+            if self.startLevel == True and self.whatLevel == 1 and self.planet.rect.centerx >= 1010:
                 self.startLevel = False
                 takeOff = True
                 self.status = "Second_level"
