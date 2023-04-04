@@ -10,6 +10,7 @@ WHITE = (255, 255, 255)
 # TODO: cambiar esto para el juego
 WIN_FIRST_LEVEL = 100
 WIN_SECOND_LEVEL = 1200
+WIN_THIRD_LEVEL = 3300
 
 
 class Main:
@@ -49,6 +50,8 @@ class Main:
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)
         self.planet = planets.Planet(800, 600)
+
+        
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
         self.asteroid_2 = asteroids.Asteroid(800, 600)
@@ -60,6 +63,7 @@ class Main:
 
         self.asteroidLevel1 = pg.sprite.Group()
         self.asteroidLevel2 = pg.sprite.Group()
+        self.asteroidLevel3 = pg.sprite.Group()
         self.asteroidLevel1.add(self.asteroid_0, self.asteroid_1, self.asteroid_2)
         self.asteroidLevel2.add(
             self.asteroid_0,
@@ -67,6 +71,15 @@ class Main:
             self.asteroid_2,
             self.asteroid_3,
             self.asteroid_4,
+        )
+        self.asteroidLevel3.add(self.asteroid_0,
+            self.asteroid_1,
+            self.asteroid_2,
+            self.asteroid_3,
+            self.asteroid_4, 
+            self.asteroid_5, 
+            self.asteroid_6, 
+            self.asteroid_7,
         )
 
     # create the keyboard events
@@ -101,6 +114,7 @@ class Main:
 
         return False
 
+    # Background movement
     def backgroundMove(self):
         self.x -= 0.5
         if self.x <= -2400:
@@ -118,6 +132,7 @@ class Main:
                 self.score = int(self.score)
 
     def winConditions(self, winLevel, asteroidForLevel):
+        
         if self.score >= winLevel:
             self.ship.land = True
             self.planet.update(800, 600)
@@ -188,11 +203,17 @@ class Main:
             self.screen.blit(self.planet.image, self.planet.rect)
             asteroidForLevel.draw(self.screen)
 
-            if self.ship.rect.centerx >= 570 and self.whatLevel == 0:
+            if self.ship.rect.centerx >= 570 and self.status == 'First_level':
                 self.score += 1000
                 level = True
                 self.whatLevel += 1
                 self.notFirstLevel = True
+                self.status = "Take_off"
+
+            if self.ship.rect.centerx >= 570 and self.status == 'Second_level':
+                self.score += 2000
+                level = True
+                self.whatLevel += 1
                 self.status = "Take_off"
 
             if self.ship.game_over == True:
@@ -210,6 +231,7 @@ class Main:
             self.handleEvent()
             self.backgroundMove()
             self.ship.update(800, 600)
+            
             self.ship.rotate()
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
@@ -230,8 +252,10 @@ class Main:
                 self.startLevel = False
                 takeOff = True
                 self.status = "Second_level"
-            elif self.startLevel == True and self.whatLevel == 2:
-                print("third_level")
+            elif self.startLevel == True and self.whatLevel == 2 and self.planet.rect.centerx >= 1010:
+                self.startLevel = False
+                takeOff = True
+                self.status = "Third_level"
             else:
                 pass
 
@@ -256,6 +280,8 @@ class Main:
                 self.levels(self.asteroidLevel1, WIN_FIRST_LEVEL)
             elif self.status == "Second_level":
                 self.levels(self.asteroidLevel2, WIN_SECOND_LEVEL)
+            elif self.status == 'Third_level':
+                self.levels(self.asteroidLevel3, WIN_THIRD_LEVEL)
             elif self.status == "Take_off":
                 self.takeOff()
             elif self.status == "Game_over":
