@@ -50,7 +50,6 @@ class Main:
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)
         self.planet = planets.Planet(800, 600)
-
         
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
@@ -132,9 +131,11 @@ class Main:
                 self.score = int(self.score)
 
     def winConditions(self, winLevel, asteroidForLevel):
-        
-        if self.score >= winLevel:
+        if self.status == 'Third_level':
+            self.planet.state = True        
+        if self.score >= winLevel:            
             self.ship.land = True
+            self.planet.whatPlanet()
             self.planet.update(800, 600)
             if self.planet.rect.centerx <= 1000 and self.ship.angle % 180 <= 0:
                 self.ship.land = False
@@ -149,7 +150,6 @@ class Main:
             for entity in asteroidForLevel:
                 if entity.rect.centerx >= 1200:
                     pg.sprite.Group.empty(asteroidForLevel)
-
         else:
             pass
 
@@ -227,10 +227,11 @@ class Main:
         takeOff = False
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship.land = True
+        
         while not takeOff:
             self.handleEvent()
             self.backgroundMove()
-            self.ship.update(800, 600)
+            self.ship.update(800, 600)            
             
             self.ship.rotate()
             self.screen.blit(self.background, (self.x, 0))
@@ -290,7 +291,6 @@ class Main:
     def quit(self):
         pg.quit()
         sys.exit()
-
 
 if __name__ == "__main__":
     pg.init(),
