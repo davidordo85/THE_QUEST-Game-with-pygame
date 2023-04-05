@@ -2,15 +2,15 @@ import pygame as pg
 from ship import ship
 from asteroids import asteroids
 from planets import planets
+from records import records
 import sys
 import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-# TODO: cambiar esto para el juego
-WIN_FIRST_LEVEL = 100
-WIN_SECOND_LEVEL = 1200
-WIN_THIRD_LEVEL = 3300
+WIN_FIRST_LEVEL = 900
+WIN_SECOND_LEVEL = 4900
+WIN_THIRD_LEVEL = 14100
 
 
 class Main:
@@ -23,7 +23,7 @@ class Main:
         pg.display.set_caption("THE QUEST")
 
         # added fonts and images
-        self.description = pg.font.Font("./resources/fonts/OdibeeSans-Regular.ttf", 30)
+        self.description = pg.font.Font("./resources/fonts/OdibeeSans-Regular.ttf", 20)
         self.title = pg.font.Font("./resources/fonts/OdibeeSans-Regular.ttf", 100)
         self.fontScore = pg.font.Font("./resources/fonts/OdibeeSans-Regular.ttf", 50)
         self.background = pg.image.load(
@@ -32,7 +32,7 @@ class Main:
 
         self.score = 0
         self.whatLevel = 0
-        self.status = "First_level"
+        self.status = "Opening"
 
         # create the screen texts and objects
         self.displayProduction = self.title.render("GERMEN PRODUCTION", True, (WHITE))
@@ -46,10 +46,12 @@ class Main:
         self.startingLevel = self.description.render(
             "Press enter for start", True, (WHITE)
         )
-        self.theEnd = self.description.render("Game Over", True, (WHITE))
+        self.theEnd = self.title.render("Game Over", True, (WHITE))
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship = ship.Ship(800, 600)
         self.planet = planets.Planet(800, 600)
+        self.writing = records.Record("")
+        self.writing.pos((325, 300))
         
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
@@ -158,7 +160,7 @@ class Main:
         while not displayOpening:
             self.handleEvent()
             self.screen.fill("black")
-            self.screen.blit(self.displayProduction, (150, 200))
+            self.screen.blit(self.displayProduction, (50, 200))
             self.redraw()
             time.sleep(4)
             displayOpening = True
@@ -171,7 +173,7 @@ class Main:
             self.handleEvent()
             self.screen.fill("black")
             self.screen.blit(self.displayOpening, (100, 50))
-            self.screen.blit(self.displayDescription, (150, 250))
+            self.screen.blit(self.displayDescription, (10, 250))
             self.screen.blit(self.startGame, (150, 500))
             self.redraw()
             if self.start == True:
@@ -215,6 +217,11 @@ class Main:
                 level = True
                 self.whatLevel += 1
                 self.status = "Take_off"
+
+            if self.ship.rect.centerx >= 570 and self.status == 'Third_level':
+                self.score += 5000
+                level = True
+                self.status = "Game_over"
 
             if self.ship.game_over == True:
                 time.sleep(4)
@@ -264,11 +271,29 @@ class Main:
 
     def gameOver(self):
         over = False
+        self.scoring = self.fontScore.render("Your final score... {}".format(str(self.score)), True, WHITE)
 
         while not over:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    return self.quit()
+                if event.type == pg.KEYDOWN:
+                    if event.unicode in "abcdefghijklmnñopqrstuvwyz" and len(self.writing.character) <= 10:
+                        self.writing.character += event.unicode
+                        self.writing.valor += 1
+                    elif event.key == pg.K_BACKSPACE:
+                        self.writing.character = self.writing.character[:-1]
+                        self.writing.valor -= 1
+                        if self.writing.valor < 0:
+                            self.writing.valor = 0
+
             self.handleEvent()
-            self.screen.fill("black")
-            self.screen.blit(self.theEnd, (150, 500))
+            self.screen.fill("blue")
+            self.screen.blit(self.scoring, (100, 150))
+            self.screen.blit(self.theEnd, (30, 30))
+            self.text = self.writing.render()
+            pg.draw.rect(self.screen, (WHITE), self.text[0])
+            self.screen.blit(self.text[1], self.writing.pos())
             self.redraw()
 
     def main_loop(self):

@@ -31,11 +31,9 @@ class Planet(pg.sprite.Sprite):
     def whatPlanet(self):
         self.images = self.loadImages()
         if self.state == True:
-            print('win')
             self.image_act = 1
             self.image.blit(self.images[self.image_act], (0, 0))
         else:
-            print('not win')
             self.image_act = 0
             self.image.blit(self.images[self.image_act], (0, 0))
 
