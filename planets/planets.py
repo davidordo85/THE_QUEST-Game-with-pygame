@@ -19,7 +19,7 @@ class Planet(pg.sprite.Sprite):
         self.rect.centerx = 1100
         self.rect.centery = 300
 
-    def loadImages(self):
+    def load_images(self):
         images = []
         for i in range(self.num_sprites):
             image = pg.image.load(
@@ -28,8 +28,8 @@ class Planet(pg.sprite.Sprite):
             images.append(image)
         return images
 
-    def whatPlanet(self):
-        self.images = self.loadImages()
+    def what_planet(self):
+        self.images = self.load_images()
         if self.state == True:
             self.image_act = 1
             self.image.blit(self.images[self.image_act], (0, 0))
@@ -43,7 +43,7 @@ class Planet(pg.sprite.Sprite):
             self.vx = 0
         self.rect.centerx -= self.vx
 
-    def takeOffPlanet(self, limSupX, limSupY):
+    def take_offPlanet(self, limSupX, limSupY):
         self.vx = 1.1
         if self.rect.centerx >= 1010:
             self.vx = 0

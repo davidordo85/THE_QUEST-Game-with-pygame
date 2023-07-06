@@ -21,7 +21,7 @@ class Record():
 
         return (rect, textBlock)
 
-    def posX(self, val=None):
+    def pos_x(self, val=None):
         if val == None:
             return self.position[0]
         else:
@@ -30,7 +30,7 @@ class Record():
             except:
                 pass
 
-    def posY(self, val=None):
+    def pos_y(self, val=None):
         if val == None:
             return self.position[1]
         else:

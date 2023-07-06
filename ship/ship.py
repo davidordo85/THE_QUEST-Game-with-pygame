@@ -30,7 +30,7 @@ class Ship(pg.sprite.Sprite):
         self.rect.centerx = 40
         self.rect.centery = 300
 
-    def loadImages(self):
+    def load_images(self):
         images = []
         for i in range(self.num_sprites):
             image = pg.image.load(
@@ -63,7 +63,7 @@ class Ship(pg.sprite.Sprite):
     def collide(self):
         if self.crash == True:
             self.image_act += 1
-            self.images = self.loadImages()
+            self.images = self.load_images()
             if self.image_act >= self.num_sprites:
                 self.image_act = 0
                 self.game_over = True

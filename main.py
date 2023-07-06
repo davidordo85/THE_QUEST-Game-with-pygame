@@ -3,8 +3,8 @@ from ship import ship
 from asteroids import asteroids
 from planets import planets
 from records import records
-import sys
-import time
+import sys, time
+
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -12,9 +12,11 @@ WIN_FIRST_LEVEL = 900
 WIN_SECOND_LEVEL = 4900
 WIN_THIRD_LEVEL = 14100
 
+clock = pg.time.Clock()
+FPS = 60
 
-class Main:
-    clock = pg.time.Clock()
+
+class Main:    
 
     def __init__(self, w, h):
         # create the screen with its size
@@ -116,7 +118,7 @@ class Main:
         return False
 
     # Background movement
-    def backgroundMove(self):
+    def background_move(self):
         self.x -= 0.5
         if self.x <= -2400:
             self.x = 0
@@ -124,7 +126,7 @@ class Main:
     def redraw(self):
         pg.display.flip()
 
-    def scoringConditions(self, asteroidForLevel):
+    def scoring_conditions(self, asteroidForLevel):
         for entity in asteroidForLevel:
             if entity.rect.centerx <= 0:
                 self.score += 20
@@ -132,12 +134,12 @@ class Main:
             else:
                 self.score = int(self.score)
 
-    def winConditions(self, winLevel, asteroidForLevel):
+    def win_conditions(self, winLevel, asteroidForLevel):
         if self.status == 'Third_level':
             self.planet.state = True        
         if self.score >= winLevel:            
             self.ship.land = True
-            self.planet.whatPlanet()
+            self.planet.what_planet()
             self.planet.update(800, 600)
             if self.planet.rect.centerx <= 1000 and self.ship.angle % 180 <= 0:
                 self.ship.land = False
@@ -187,16 +189,17 @@ class Main:
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
 
         while not level:
+            clock.tick(FPS)
             self.handleEvent()
-            self.backgroundMove()
-            self.scoringConditions(asteroidForLevel)
+            self.background_move()
+            self.scoring_conditions(asteroidForLevel)
             self.ship.update(800, 600)
             asteroidForLevel.update(800, 600)
 
-            # self.ship.collide()
+            self.ship.collide()
             self.ship.crashed(asteroidForLevel)
             self.ship.rotate()
-            self.winConditions(Win, asteroidForLevel)
+            self.win_conditions(Win, asteroidForLevel)
 
             self.screen.blit(self.background, (self.x, 0))
             self.screen.blit(self.background, (self.x + 2400, 0))
@@ -230,14 +233,15 @@ class Main:
 
             self.redraw()
 
-    def takeOff(self):
-        takeOff = False
+    def take_off(self):
+        clock.tick(FPS)
+        take_off = False
         self.scoring = self.fontScore.render(str(self.score), True, WHITE)
         self.ship.land = True
         
-        while not takeOff:
+        while not take_off:
             self.handleEvent()
-            self.backgroundMove()
+            self.background_move()
             self.ship.update(800, 600)            
             
             self.ship.rotate()
@@ -252,24 +256,24 @@ class Main:
                 self.ship.vx -= 1
 
             if self.ship.rect.centerx <= 40:
-                self.planet.takeOffPlanet(800, 600)
+                self.planet.take_offPlanet(800, 600)
                 self.ship.vx = 0
                 self.screen.blit(self.startingLevel, (150, 500))
 
             if self.startLevel == True and self.whatLevel == 1 and self.planet.rect.centerx >= 1010:
                 self.startLevel = False
-                takeOff = True
+                take_off = True
                 self.status = "Second_level"
             elif self.startLevel == True and self.whatLevel == 2 and self.planet.rect.centerx >= 1010:
                 self.startLevel = False
-                takeOff = True
+                take_off = True
                 self.status = "Third_level"
             else:
                 pass
 
             self.redraw()
 
-    def gameOver(self):
+    def game_over(self):
         over = False
         self.scoring = self.fontScore.render("Your final score... {}".format(str(self.score)), True, WHITE)
 
@@ -309,9 +313,9 @@ class Main:
             elif self.status == 'Third_level':
                 self.levels(self.asteroidLevel3, WIN_THIRD_LEVEL)
             elif self.status == "Take_off":
-                self.takeOff()
+                self.take_off()
             elif self.status == "Game_over":
-                self.gameOver()
+                self.game_over()
 
     def quit(self):
         pg.quit()

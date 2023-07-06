@@ -2,6 +2,7 @@ import pygame as pg
 import random
 
 
+
 class Asteroid(pg.sprite.Sprite):
     vx = 0
     vy = 0
@@ -13,13 +14,13 @@ class Asteroid(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.Surface((self.w, self.h), pg.SRCALPHA, 32)
         self.rect = self.image.get_rect()
-        self.images = self.loadImages()
+        self.images = self.load_images()
         self.image_act = 0
         self.image.blit(self.images[self.image_act], [0, 0])
         self.rect.centerx = 1200
         self.rect.centery = random.randint(40, 560)
 
-    def loadImages(self):
+    def load_images(self):
         images = []
         for i in range(self.num_sprites):
             image = pg.image.load(
