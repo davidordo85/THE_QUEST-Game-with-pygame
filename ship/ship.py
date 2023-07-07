@@ -4,8 +4,8 @@ import pygame as pg
 class Ship(pg.sprite.Sprite):
     vx = 0
     vy = 0
-    w = 65
-    h = 65
+    w = 63
+    h = 63
     num_sprites = 17
 
     def __init__(self, x, y):
@@ -54,11 +54,12 @@ class Ship(pg.sprite.Sprite):
             self.rect.centery = limSupY - self.rect.h // 2
 
     def crashed(self, group):
-        list_crash = pg.sprite.spritecollide(self, group, False)
-        if len(list_crash) > 0:
-            self.crash = True
-        else:
-            pass
+        collision_threshold = 50
+        for other_sprite in group:
+            if self.rect.colliderect(other_sprite.rect):
+                overlap = self.rect.clip(other_sprite.rect).width
+                if overlap >= collision_threshold:
+                    self.crash = True
 
     def collide(self):
         if self.crash == True:
@@ -72,25 +73,25 @@ class Ship(pg.sprite.Sprite):
             pass
 
     def rotate(self):
-        if self.land is True: # if the rotation is ok
-            self.angle = (self.angle +1)%360 # 360º turn
-            self.image = pg.transform.rotate(self.frame, self.angle) # transform image into spin
-            rect = self.image.get_rect() # save image to rect
-            halfW = rect.centerx 
+        if self.land is True:  # if the rotation is ok
+            self.angle = (self.angle + 1) % 360  # 360º turn
+            self.image = pg.transform.rotate(
+                self.frame, self.angle
+            )  # transform image into spin
+            rect = self.image.get_rect()  # save image to rect
+            halfW = rect.centerx
             halfH = rect.centery
 
             dX = halfW - self.w // 2
             dY = halfH - self.h // 2
 
             self.rect.centerx = self.rotateCenter[0] - dX
-            self.rect.centery = self.rotateCenter[1] - dY                        
-            
-            if self.angle % 180 <= 0:
+            self.rect.centery = self.rotateCenter[1] - dY
 
+            if self.angle % 180 <= 0:
                 self.land = False
                 self.vx = 1
                 self.rect.centerx -= self.vx
 
         else:
             self.rotateCenter = self.rect.center
-

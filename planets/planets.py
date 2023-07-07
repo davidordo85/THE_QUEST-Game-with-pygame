@@ -1,11 +1,12 @@
 import pygame as pg
 
+
 class Planet(pg.sprite.Sprite):
     vx = 0
     vy = 0
-    w = 430
-    h = 360
-    num_sprites = 2
+    w = 74
+    h = 90
+    num_sprites = 28
 
     def __init__(self, x, y):
         super().__init__()
@@ -13,18 +14,18 @@ class Planet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.state = False
         self.image_act = 0
-        self.frame = pg.image.load("./resources/images/planets/planet_0.png").convert_alpha()
+        self.frame = pg.image.load(
+            "./resources/images/planets/planet_0.png"
+        ).convert_alpha()
         self.image.blit(self.frame, (0, 0), (0, 0, self.w, self.h))
-        
+
         self.rect.centerx = 1100
         self.rect.centery = 300
 
     def load_images(self):
         images = []
         for i in range(self.num_sprites):
-            image = pg.image.load(
-                "./resources/images/planets/planet_{}.png".format(i)
-                )
+            image = pg.image.load("./resources/images/planets/planet_{}.png".format(i))
             images.append(image)
         return images
 
@@ -49,5 +50,3 @@ class Planet(pg.sprite.Sprite):
             self.vx = 0
 
         self.rect.centerx += self.vx
-
-        

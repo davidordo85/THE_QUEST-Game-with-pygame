@@ -64,6 +64,10 @@ class Main:
         self.writing = records.Record("")
         self.writing.pos((325, 300))
 
+    def reset_asteroid_and_ship(self):
+        self.ship = ship.Ship(800, 600)
+        self.ship.crash = False
+        self.ship.game_over = False
         self.asteroid_0 = asteroids.Asteroid(800, 600)
         self.asteroid_1 = asteroids.Asteroid(800, 600)
         self.asteroid_2 = asteroids.Asteroid(800, 600)
@@ -219,6 +223,11 @@ class Main:
 
     # First loop
     def opening(self):
+        # reset for second game
+
+        self.score = 0
+        self.writing.character = ""
+
         displayOpening = False
         while not displayOpening:
             self.handleEvent()
@@ -254,7 +263,7 @@ class Main:
             self.redraw()
             if self.start == True:
                 front = True
-
+        self.reset_asteroid_and_ship()
         self.status = "First_level"
 
     # Game levels loop

@@ -2,7 +2,6 @@ import pygame as pg
 import random
 
 
-
 class Asteroid(pg.sprite.Sprite):
     vx = 0
     vy = 0
