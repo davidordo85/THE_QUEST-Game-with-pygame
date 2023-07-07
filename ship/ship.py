@@ -54,10 +54,10 @@ class Ship(pg.sprite.Sprite):
             self.rect.centery = limSupY - self.rect.h // 2
 
     def crashed(self, group):
-        collision_threshold = 50
+        collision_threshold = 30
         for other_sprite in group:
             if self.rect.colliderect(other_sprite.rect):
-                overlap = self.rect.clip(other_sprite.rect).width
+                overlap = self.rect.clip(other_sprite.rect).height
                 if overlap >= collision_threshold:
                     self.crash = True
 
